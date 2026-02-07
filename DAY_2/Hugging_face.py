@@ -42,7 +42,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 3,
+   "execution_count": 2,
    "id": "93715270",
    "metadata": {},
    "outputs": [
@@ -105,7 +105,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 5,
+   "execution_count": 4,
    "id": "fa0b1784",
    "metadata": {},
    "outputs": [
@@ -115,7 +115,7 @@
      "text": [
       "No model was supplied, defaulted to google/vit-base-patch16-224 and revision 3f49326.\n",
       "Using a pipeline without specifying a model name and revision in production is not recommended.\n",
-      "Loading weights: 100%|██████████| 200/200 [00:00<00:00, 1049.11it/s, Materializing param=vit.layernorm.weight]                                \n",
+      "Loading weights: 100%|██████████| 200/200 [00:00<00:00, 920.49it/s, Materializing param=vit.layernorm.weight]                                 \n",
       "Fast image processor class <class 'transformers.models.vit.image_processing_vit_fast.ViTImageProcessorFast'> is available for this model. Using slow image processor class. To use the fast image processor class set `use_fast=True`.\n"
      ]
     },
@@ -193,7 +193,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 7,
+   "execution_count": 6,
    "id": "ded394b7",
    "metadata": {},
    "outputs": [
@@ -201,8 +201,8 @@
      "name": "stderr",
      "output_type": "stream",
      "text": [
-      "Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n",
-      "Loading weights: 100%|██████████| 216/216 [00:00<00:00, 1336.32it/s, Materializing param=wav2vec2.masked_spec_embed]                                            \n"
+      "Loading weights: 100%|██████████| 216/216 [00:00<00:00, 1595.23it/s, Materializing param=wav2vec2.masked_spec_embed]                                            \n",
+      "Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.\n"
      ]
     },
     {
@@ -211,15 +211,15 @@
      "text": [
       "Audio classification results:\n",
       "- _silence_: 1.00\n",
-      "- left: 0.00\n",
-      "- down: 0.00\n",
       "- right: 0.00\n",
-      "- yes: 0.00\n",
-      "- stop: 0.00\n",
       "- _unknown_: 0.00\n",
+      "- left: 0.00\n",
+      "- yes: 0.00\n",
+      "- down: 0.00\n",
+      "- stop: 0.00\n",
       "- off: 0.00\n",
-      "- up: 0.00\n",
       "- no: 0.00\n",
+      "- up: 0.00\n",
       "- go: 0.00\n",
       "- on: 0.00\n"
      ]
@@ -268,7 +268,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 13,
+   "execution_count": 8,
    "id": "e15bbf88",
    "metadata": {},
    "outputs": [
@@ -304,6 +304,127 @@
     "# Access the first example in the training set\n",
     "print(\"\\nExample from the training set:\")\n",
     "print(dataset[\"train\"][0])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "72c83718",
+   "metadata": {},
+   "source": [
+    "## Transcription with Hugging Face\n",
+    "\n",
+    "Audio transcription is the task of converting spoken language into text. Hugging Face also offers models for this task.\n",
+    "\n",
+    "Here's how you can use a pre-trained model for audio transcription:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "09fd8bd3",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "Loading weights: 100%|██████████| 212/212 [00:00<00:00, 1101.77it/s, Materializing param=wav2vec2.feature_projection.projection.weight]                        \n",
+      "\u001b[1mWav2Vec2ForCTC LOAD REPORT\u001b[0m from: facebook/wav2vec2-base-960h\n",
+      "Key                        | Status  | \n",
+      "---------------------------+---------+-\n",
+      "wav2vec2.masked_spec_embed | MISSING | \n",
+      "\n",
+      "\u001b[3mNotes:\n",
+      "- MISSING\u001b[3m\t:those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.\u001b[0m\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Transcription result:\n",
+      "THE STALE SMELL OF OLD BEER LINGERS IT TAKES HEAT TO BRING OUT THE ODOR A COLD DIP RESTORES HEALTH AND ZEST A SALT PICKLE TASTES FINE WITH HAM TAKOS AL PASTORE ARE MY FAVORITE A ZESTFUL FOOD IS THE HOT CROSS BUN\n"
+     ]
+    }
+   ],
+   "source": [
+    "from transformers import pipeline\n",
+    "import soundfile as sf\n",
+    "import torch\n",
+    "\n",
+    "# Load the automatic speech recognition pipeline\n",
+    "transcriber = pipeline(\"automatic-speech-recognition\", model=\"facebook/wav2vec2-base-960h\")\n",
+    "\n",
+    "# Transcribe the audio file\n",
+    "audio_file = \"harvard.wav\"\n",
+    "try:\n",
+    "    transcription = transcriber(audio_file)\n",
+    "    print(\"Transcription result:\")\n",
+    "    print(transcription['text'])\n",
+    "except Exception as e:\n",
+    "    print(f\"Error transcribing audio: \\n{e}\")\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "8c6f0c10",
+   "metadata": {},
+   "source": [
+    "## Summarization with Hugging Face\n",
+    "\n",
+    "Text summarization is the task of creating a shorter version of a text while preserving its main ideas. Hugging Face provides several models that can be used for this purpose.\n",
+    "\n",
+    "Here's how you can use a pre-trained model from Hugging Face for summarization:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "06cae513",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "No model was supplied, defaulted to distilbert/distilbert-base-uncased-finetuned-sst-2-english and revision 714eb0f.\n",
+      "Using a pipeline without specifying a model name and revision in production is not recommended.\n",
+      "Loading weights: 100%|██████████| 104/104 [00:00<00:00, 1285.06it/s, Materializing param=pre_classifier.weight]                                  \n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "\n",
+      "Original Text:\n",
+      "\n",
+      "Based on coalescence of Mitochondrial DNA and Y Chromosome data, it is thought that the earliest extant lineages of anatomically modern humans or Homo sapiens on the Indian subcontinent had reached there from Africa between 80,000 and 50,000 years ago\n",
+      "\n",
+      "\n",
+      "Summary:\n",
+      "NEGATIVE\n"
+     ]
+    }
+   ],
+   "source": [
+    "from transformers import pipeline\n",
+    "\n",
+    "# Load the summarization pipeline\n",
+    "summarizer = pipeline(\"text-classification\")\n",
+    "\n",
+    "# Text to summarize\n",
+    "text = \"\"\"\n",
+    "Based on coalescence of Mitochondrial DNA and Y Chromosome data, it is thought that the earliest extant lineages of anatomically modern humans or Homo sapiens on the Indian subcontinent had reached there from Africa between 80,000 and 50,000 years ago\n",
+    "\"\"\"\n",
+    "\n",
+    "# Summarize the text\n",
+    "summary = summarizer(text, max_length=100, min_length=30, do_sample=False)\n",
+    "\n",
+    "print(\"\\nOriginal Text:\")\n",
+    "print(text)\n",
+    "print(\"\\nSummary:\")\n",
+    "print(summary[0]['label'])"
    ]
   }
  ],
