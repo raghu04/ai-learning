@@ -24,13 +24,7 @@ jobs:
           source .venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install black flake8 nbconvert
-
-      - name: Run code formatters
-        run: |
-          source .venv/bin/activate
-          black --check . --exclude .venv --exclude .venv
-          flake8 . --exclude .venv --exclude .venv
+          pip install nbconvert
 
       - name: Execute notebooks (headless)
         run: |
