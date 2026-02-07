@@ -22,4 +22,4 @@ Import can be done entire module Or part of it.
 # Import from a package
 from Data_Pack.Data_Processing import Print_Data
 
-Print_Data (34, 987)
+Print_Data(34, 987)
