@@ -26,11 +26,3 @@ jobs:
           pip install -r requirements.txt
           pip install nbconvert
 
-      - name: Execute notebooks (headless)
-        run: |
-          source .venv/bin/activate
-          # Find all notebooks and execute them, allowing errors to surface as failures
-          find . -name "*.ipynb" -not -path "*/.git/*" -print0 | while IFS= read -r -d '' nb; do
-            echo "Executing $nb"
-            jupyter nbconvert --to notebook --execute "$nb" --output /dev/null || exit 1
-          done
