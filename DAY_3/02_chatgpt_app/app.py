@@ -55,7 +55,7 @@ if prompt := st.chat_input("What would you like to know?"):
     with st.chat_message("assistant"):
         try:
             response = client.chat.completions.create(
-                model="mistralai/Mistral-7B-Instruct-v0.3",  # safer free model
+                model="openai/gpt-oss-120b:free",  # safer free model
                 messages=st.session_state.messages,
                 stream=True,
                 extra_headers={
