@@ -1,7 +1,3 @@
-# AI Learning
-
-This repository is a collection of learning notebooks that explore Python and machine‑learning concepts.  The code lives primarily in Jupyter notebooks, with a few supporting scripts.
-
 ## Getting Started
 
 1. **Set up the virtual environment** (if not already present):

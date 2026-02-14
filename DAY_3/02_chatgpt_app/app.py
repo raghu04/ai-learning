@@ -48,8 +48,8 @@ if prompt := st.chat_input("What would you like to know?"):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-# Training models on your inputs or prompts - Open router consent or privacy page
-# Retention - How much time you'd want to store your input prompts to these models.
+    # Training models on your inputs or prompts - Open router consent or privacy page
+    # Retention - How much time you'd want to store your input prompts to these models.
 
     # Generate AI response
     with st.chat_message("assistant"):
